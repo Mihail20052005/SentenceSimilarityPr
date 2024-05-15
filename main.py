@@ -1,16 +1,23 @@
-# This is a sample Python script.
+from scipy.spatial import distance
+from torch import load
+from src.model import InferSent
+from random import randint
+import numpy as np
+import torch
+import time
+import torch.nn as nn
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+
+params_model = {'bsize': 64, 'word_emb_dim': 300, 'enc_lstm_dim': 2048,
+                'pool_type': 'max', 'dpout_model': 0.0}
+sentences = ["I want to go to champ"]
+test = "I love to go to champ"
+print('Test Sentence:', test)
+model2 = torch.load('model.pkl')
+
+test_vec = model2.encode([test])[0]
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+for sent in sentences:
+    similarity_score = 1-distance.cosine(test_vec, model2.encode([sent])[0])
+    print(f'\nFor {sent}\nSimilarity Score = {similarity_score} ')
